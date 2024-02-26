@@ -97,7 +97,16 @@ const selectWinner = (customers) => {
 const generateTable = (data) => {
     var table = document.getElementById("jsonTable");
     table.innerHTML = '';
-
+    var thead = table.createTHead();
+    var row = thead.insertRow();
+    var th = document.createElement("th");
+    th.appendChild(document.createTextNode("STT"));
+    row.appendChild(th);
+    for (var key in data[0]) {
+        var th = document.createElement("th");
+        th.appendChild(document.createTextNode(key));
+        row.appendChild(th);
+    }
     var tbody = table.createTBody();
     var i = 0;
 
@@ -109,6 +118,8 @@ const generateTable = (data) => {
             } else {
                 row.classList.add('slideInLeft');
             }
+            var cell = row.insertCell();
+            cell.appendChild(document.createTextNode(i + 1));
             for (var key in data[i]) {
                 var cell = row.insertCell();
                 cell.appendChild(document.createTextNode(data[i][key]));
