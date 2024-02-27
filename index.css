@@ -156,23 +156,91 @@ th {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.8); /* semi-transparent white background */
-    display: none; /* Initially hidden */
+    background-color: rgba(255, 255, 255, 0.8);
+    /* semi-transparent white background */
+    display: none;
+    /* Initially hidden */
     justify-content: center;
     align-items: center;
-    z-index: 9999; /* Ensure it's above other content */
+    z-index: 9999;
+    /* Ensure it's above other content */
 }
 
 .spinner {
-    border: 4px solid #f3f3f3; /* Light grey */
-    border-top: 4px solid #3498db; /* Blue */
+    border: 4px solid #f3f3f3;
+    /* Light grey */
+    border-top: 4px solid #3498db;
+    /* Blue */
     border-radius: 50%;
     width: 50px;
     height: 50px;
-    animation: spin 1s linear infinite; /* Rotate animation */
+    animation: spin 1s linear infinite;
+    /* Rotate animation */
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
+
+.numbers-prize {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.number {
+    padding: 2.5rem;
+    /* border: 1px solid black; */
+    margin: 5px;
+    font-size: 40px;
+    border-radius: 15px;
+    background-color: #0030c3;
+    color: #fff;
+    transition: transform 0.5s ease-in-out;
+    /* Animation transition */
+    font-weight: 800;
+}
+
+@property --num {
+    syntax: "<integer>";
+    initial-value: 0;
+    inherits: false;
+  }
+  
+  span.number-value {
+    transition: --num 0.2s;
+    counter-set: num var(--num);
+    font: 800 40px system-ui;
+    animation: changeNum 0.2s linear infinite;
+  }
+  span.number-value::after {
+    content: counter(num);
+  }
+  /* span.number-value {
+    --num: 10;
+  } */
+
+  @keyframes changeNum {
+    0% { --num: 0; }
+    100% { --num: 9; }
+  }
+  
+  /* .number-value {
+    animation: changeNum 2s linear infinite;
+  }
+  
+  span.number-value {
+    transition: --num 2s;
+    counter-set: num var(--num);
+    font: 800 40px system-ui;
+  }
+  
+  span.number-value::after {
+    content: counter(num);
+  } */

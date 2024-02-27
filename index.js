@@ -109,24 +109,40 @@ const generateTable = (data) => {
     }
     var tbody = table.createTBody();
     var i = 0;
-
     const addRecord = () => {
         if (i < data.length) {
-            var row = tbody.insertRow();
-            if (i % 2 === 0) {
-                row.classList.add('slideInRight');
-            } else {
-                row.classList.add('slideInLeft');
-            }
-            var cell = row.insertCell();
-            cell.appendChild(document.createTextNode(i + 1));
-            for (var key in data[i]) {
+            const customerCode = data[i]["Mã khách hàng"]; // Get the value associated with the key "Mã khách hàng"
+
+            // Extract numeric part using regular expression
+            const numericPart = customerCode.match(/\d+/);
+
+            // Check if numericPart is found and get the first match
+            const extractedNumber = numericPart ? numericPart[0] : "";
+            console.log(extractedNumber.toString());
+            setTimeout(() => {
+                startRandomAnimation(extractedNumber);
+            }, 800);
+            setTimeout(() => {
+                var row = tbody.insertRow();
+                if (i % 2 === 0) {
+                    row.classList.add('slideInRight');
+                } else {
+                    row.classList.add('slideInLeft');
+                }
                 var cell = row.insertCell();
-                cell.appendChild(document.createTextNode(data[i][key]));
-            }
-            i++;
-            window.scrollTo(0, document.body.scrollHeight);
-            setTimeout(addRecord, 1000);
+                cell.appendChild(document.createTextNode(i + 1));
+
+                for (var key in data[i]) {
+                    var cell = row.insertCell();
+                    cell.appendChild(document.createTextNode(data[i][key]));
+                }
+                i++;
+                // window.scrollTo(0, document.body.scrollHeight); 
+                addRecord();
+
+            }, 2000)
+
+            // setTimeout(addRecord, 1000);
         }
     }
 
@@ -158,13 +174,48 @@ const showElements = () => {
         prizeDescriptionDiv.style.display = 'block';
     }
 }
+const numberValueElements = document.querySelectorAll('.number-value');
 
+function stopAnimation() {
+    numberValueElements.forEach(element => {
+        element.style.animation = 'none';
+    });
+}
+
+function setFinalValue(element, value) {
+    element.style.setProperty('--num', value);
+}
+
+function randomValue(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function startRandomAnimation(value) {
+    const interval = setInterval(() => {
+        numberValueElements.forEach(element => {
+            let value = randomValue(1, 9);
+            setFinalValue(element, value);
+        });
+    }, 200); // Adjust the interval speed here
+
+    setTimeout(() => {
+        clearInterval(interval);
+        stopAnimation();
+        numberValueElements.forEach((element, index) => {
+            setFinalValue(element, parseInt(value[index], 10));
+        });
+    }, 1000); // 2 seconds, adjust as needed
+}
+// Example usage:
 document.addEventListener("DOMContentLoaded", async () => {
+    stopAnimation();
+    // startRandomAnimation('');
     const data = await fetchJson('customer.json');
     hideElements();
     const searchButton = document.getElementById("selectWinner");
     searchButton.addEventListener("click", () => {
         selectWinner(data);
+        stopAnimation();
     });
+
 
 })
