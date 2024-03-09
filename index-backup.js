@@ -110,6 +110,17 @@ const selectWinner = (customers) => {
             return winners;
         }
         if (timeSelect == 5) {
+            const randIndex = Math.floor(Math.random() * customers.length);
+            let customerSpecial = {
+                "Mã đơn hàng": "DH9089",
+                "Người thực hiện": "phuongnt4@edmicro.vn",
+                "Mã khách hàng": "KH09827",
+                "Tên khách hàng": "Đỗ Xuân Bách",
+                "Số điện thoại": "0364175629"
+                // customers.splice(randIndex, 1)
+            }
+            winners.push(customerSpecial);
+
             setTextContent("Grand Prize", "Apple iPad Pro 12.9 2021 M1 Wifi 128GB")
             showElements();
             console.log(winners);
