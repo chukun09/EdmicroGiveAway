@@ -132,7 +132,7 @@ const generateTable = (data) => {
 
                 for (var key in data[i]) {
                     if (key === "Số điện thoại") {
-                        var phoneNumber = String(data[i]["Số điện thoại"]).replace(/\d{3}(?=\d{3}$)/, '***');
+                        var phoneNumber = '0' + String(data[i]["Số điện thoại"]).replace(/\d{3}(?=\d{3}$)/, '***');
                         var cell = row.insertCell();
                         cell.appendChild(document.createTextNode(phoneNumber));
                     }
