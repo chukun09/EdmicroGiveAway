@@ -1,4 +1,5 @@
 let timeSelect = 0;
+let allWinners = [];
 
 const fetchJson = async (url) => {
     try {
@@ -27,7 +28,8 @@ const selectWinner = (customers) => {
         let winners = [];
         hideElements();
         if (timeSelect == 1) {
-            while (winners.length < 100) {
+            allWinners = [];
+            while (winners.length < 20) {
                 const randIndex = Math.floor(Math.random() * customers.length);
                 winners.push(customers[randIndex]);
                 customers.splice(randIndex, 1)
@@ -36,66 +38,59 @@ const selectWinner = (customers) => {
             setTextContent("Pize 4", "Bộ từ vựng IELTS theo band 5.5 - 6.5")
             showElements();
             generateTable(winners);
+            allWinners.push(winners);
             return winners;
         }
         if (timeSelect == 2) {
-            while (winners.length < 10) {
-                const randIndex = Math.floor(Math.random() * customers.length);
-                winners.push(customers[randIndex]);
-                customers.splice(randIndex, 1)
-            }
-            setTextContent("Pize 3", "Tai nghe Lenovo TH10 Bluetooth")
-            showElements();
-            console.log(winners);
-            generateTable(winners);
-            return winners;
-        }
-        if (timeSelect == 3) {
-            while (winners.length < 3) {
-                const randIndex = Math.floor(Math.random() * customers.length);
-                winners.push(customers[randIndex]);
-                customers.splice(randIndex, 1)
-            }
-            setTextContent("Pize 2", "Máy ảnh Fujifilm - Instax Mini 12 - Mini 11")
-            showElements();
-            console.log(winners);
-            generateTable(winners);
-            return winners;
-        }
-        if (timeSelect == 4) {
             while (winners.length < 2) {
                 const randIndex = Math.floor(Math.random() * customers.length);
                 winners.push(customers[randIndex]);
                 customers.splice(randIndex, 1)
             }
-            setTextContent("Pize 1", "Suất thi IELTS miễn phí")
+            setTextContent("Pize 3", "Vali Du Lịch Bamozo 8812 Thời Trang Size 20")
             showElements();
             console.log(winners);
             generateTable(winners);
+            allWinners.push(winners);
             return winners;
         }
-        if (timeSelect == 5) {
-            let customerSpecial = {
-                "Mã đơn hàng": "DH9089",
-                "Người thực hiện": "phuongnt4@edmicro.vn",
-                "Mã khách hàng": "KH09827",
-                "Tên khách hàng": "Đỗ Xuân Bách",
-                "Số điện thoại": "0364175629"
-                // customers.splice(randIndex, 1)
+        if (timeSelect == 3) {
+            while (winners.length < 1) {
+                const randIndex = Math.floor(Math.random() * customers.length);
+                winners.push(customers[randIndex]);
+                customers.splice(randIndex, 1)
             }
-            winners.push(customerSpecial);
-            setTextContent("Grand Prize", "Apple iPad Pro 12.9 2021 M1 Wifi 128GB")
+            setTextContent("Pize 2", "Máy ảnh Fujifilm - Instax Mini 12")
             showElements();
             console.log(winners);
             generateTable(winners);
-            const searchButton = document.getElementById("selectWinner");
-            searchButton.style.display = "none";
+            allWinners.push(winners);
+            return winners;
+        }
+        if (timeSelect == 4) {
+            while (winners.length < 1) {
+                const randIndex = Math.floor(Math.random() * customers.length);
+                winners.push(customers[randIndex]);
+                customers.splice(randIndex, 1)
+            }
+            setTextContent("Pize 1", "IPad Gen 9 2021 10.2 inch WiFi 64GB")
+            showElements();
+            console.log(winners);
+            generateTable(winners);
+            allWinners.push(winners);
             return winners;
         }
         else {
-            alert("Game over");
+            // Usage
+            exportToExcel(allWinners, 'Winners.xlsx')
+                .then(() => {
+                    console.log('Excel file generated and downloaded successfully.');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         };
-    }, 3000);
+    }, 2000);
 }
 
 const generateTable = (data) => {
@@ -116,7 +111,6 @@ const generateTable = (data) => {
     const addRecord = () => {
         if (i < data.length) {
             const customerCode = data[i]["Mã khách hàng"]; // Get the value associated with the key "Mã khách hàng"
-
             // Extract numeric part using regular expression
             const numericPart = customerCode.match(/\d+/);
 
@@ -137,14 +131,21 @@ const generateTable = (data) => {
                 cell.appendChild(document.createTextNode(i + 1));
 
                 for (var key in data[i]) {
-                    var cell = row.insertCell();
-                    cell.appendChild(document.createTextNode(data[i][key]));
+                    if (key === "Số điện thoại") {
+                        var phoneNumber = String(data[i]["Số điện thoại"]).replace(/\d{3}(?=\d{3}$)/, '***');
+                        var cell = row.insertCell();
+                        cell.appendChild(document.createTextNode(phoneNumber));
+                    }
+                    else {
+                        var cell = row.insertCell();
+                        cell.appendChild(document.createTextNode(data[i][key]));
+                    }
                 }
                 i++;
                 // window.scrollTo(0, document.body.scrollHeight); 
                 addRecord();
 
-            }, 2000)
+            }, 1500)
 
             // setTimeout(addRecord, 1000);
         }
@@ -209,6 +210,56 @@ function startRandomAnimation(value) {
         });
     }, 1000); // 2 seconds, adjust as needed
 }
+
+//Export excel
+
+// Function to export data to Excel
+function exportToExcel(data, fileName) {
+    return new Promise((resolve, reject) => {
+        // Convert data to worksheet
+        // const ws = XLSX.utils.json_to_sheet(data);
+
+        // // Create a workbook
+        // const wb = XLSX.utils.book_new();
+        // XLSX.utils.book_append_sheet(wb, ws, "Winners");
+        const wb = XLSX.utils.book_new();
+
+        // Loop through each row of data
+        data.forEach((rowData, index) => {
+            // Convert row data to worksheet
+            const ws = XLSX.utils.json_to_sheet(rowData);
+
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(wb, ws, `Prize ${4 - index}`);
+        });
+        // Generate Excel file as a Blob
+        const wbBlob = new Blob([s2ab(XLSX.write(wb, { type: 'binary' }))], { type: 'application/octet-stream' });
+
+        // Create a link element to trigger the download
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(wbBlob);
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+
+        // Trigger the download
+        link.click();
+
+        // Cleanup
+        document.body.removeChild(link);
+
+        resolve();
+    });
+}
+
+// Convert string to ArrayBuffer
+function s2ab(s) {
+    const buf = new ArrayBuffer(s.length);
+    const view = new Uint8Array(buf);
+    for (let i = 0; i < s.length; i++) {
+        view[i] = s.charCodeAt(i) & 0xFF;
+    }
+    return buf;
+}
 // Example usage:
 document.addEventListener("DOMContentLoaded", async () => {
     stopAnimation();
@@ -223,3 +274,4 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 })
+
